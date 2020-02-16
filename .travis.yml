@@ -1,5 +1,5 @@
 language: rust
-before_script: cd ./src
+before_script: cd morse
 script:
   - cargo build --verbose --all
   - cargo test --verbose --all
