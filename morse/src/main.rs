@@ -22,7 +22,7 @@ fn main() {
     let recieved_message = code_parser::reader::ReceivedMessage::new(&message);
     recieved_message.display();
 
-//    let address = define_address();
+    let _address = define_address();
 //    let builder = Server::bind(&address);
 //    let server = builder.serve(|| {
 //        service_fn_ok(|_| {
