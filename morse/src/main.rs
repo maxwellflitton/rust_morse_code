@@ -12,23 +12,16 @@ fn define_address() -> SocketAddr {
 fn main() {
     println!("Welcome to Maxwell Flitton's morse code cipher");
     let out_come = user_input::console_input::get_input();
-    let test_struct = code_parser::writer::Word::new(&out_come.to_string());
-    let message = test_struct.compile();
-//    test_struct.display();
-    for i in &message {
+    let mut test_struct = code_parser::writer::Word::new(&out_come.to_string());
+    println!(":");
+    test_struct.contained_compile();
+
+    for i in &test_struct.compiled_message {
         print!("=>{}", i);
     }
-    println!(":");
-    let recieved_message = code_parser::reader::ReceivedMessage::new(&message);
-    recieved_message.display();
 
-    let _address = define_address();
-//    let builder = Server::bind(&address);
-//    let server = builder.serve(|| {
-//        service_fn_ok(|_| {
-//            Response::new(Body::from("Almost microservice..."))
-//        })
-//    });
+    let recieved_message = code_parser::reader::ReceivedMessage::new(&test_struct.compiled_message);
+    recieved_message.display();
 }
 
 #[cfg(test)]
