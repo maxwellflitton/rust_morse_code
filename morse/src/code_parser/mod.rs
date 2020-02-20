@@ -8,11 +8,6 @@ pub mod writer {
         pub compiled_message: Vec<i32>
     }
 
-    struct WordRef<'a> {
-        content: &'a mut String,
-        compiled_message: &'a mut Vec<i32>
-    }
-
     impl Word {
 
         pub fn new(new_content: &str) -> Word {
@@ -30,21 +25,16 @@ pub mod writer {
             return buffer
         }
 
-//        pub fn contained_compile(self) {
-//            let mut buffer = Vec::new();
-//
-//            let pointer = WordRef {
-//                content: &mut self.content,
-//                compiled_message: &mut self.compiled_message
-//            };
-//
-//            for chara in self.content.chars() {
-//                buffer.push(
-//                    cipher::check_letter(&chara.to_string())
-//                );
-//            }
-//            *pointer.compiled_message = buffer;
-//        }
+        pub fn contained_compile(&mut self) {
+            let mut buffer = Vec::new();
+
+            for chara in self.content.chars() {
+                buffer.push(
+                    cipher::check_letter(&chara.to_string())
+                );
+            }
+            self.compiled_message = buffer;
+        }
 
         pub fn display(self) {
             for i in self.compiled_message {
@@ -108,6 +98,15 @@ mod writer_tests {
 
         let compare_buffer = vec![1011, 11010101, 110101101];
         assert_eq!(compare_buffer, test_buffer);
+    }
+
+    #[test]
+    fn word_contained_compile() {
+        let mut test_word = writer::Word::new("abc");
+        test_word.contained_compile();
+
+        let compare_buffer = vec![1011, 11010101, 110101101];
+        assert_eq!(compare_buffer, test_word.compiled_message);
     }
 }
 
