@@ -2,16 +2,26 @@
 
 pub mod file_handler {
 
-    use std::fs::File;
-    use std::io::{Write, BufReader, BufRead, Error};
+    use std::fs;
+    use std::io::Error;
 
-    pub fn write(buffer: Vec<i32>) -> Result<()> {
-        let mut out_put = File::create("example.txt")?;
-        for letter in buffer {
-            // make a struct that's a string with a constructor
-            write!(out_put, )
-        }
+    pub fn write(compiled_message: String) -> Result<(), Error> {
+        let new_data: &str = compiled_message.as_str();
+        fs::write("message.txt", new_data).expect("Unable to write file");
         Ok(())
+    }
+
+}
+
+#[cfg(test)]
+mod file_handler_tests {
+
+    use super::file_handler;
+
+    #[test]
+    fn write() {
+        // need to look into mocks
+        assert_eq!(1, 1);
     }
 
 }
