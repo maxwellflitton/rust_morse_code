@@ -69,7 +69,6 @@ pub mod reader {
             for chara in self.content {
                 print!("{}", chara);
             }
-            println!(":");
         }
 
     }

@@ -1,40 +1,40 @@
+#![feature(proc_macro_hygiene, decl_macro)]
 mod code_parser;
 mod user_input;
+mod file_manager;
 
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
-//use hyper::server::{Server, Response};
+#[macro_use] extern crate rocket;
 
-fn define_address() -> SocketAddr {
-    let address = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), 8080);
-    return address
+# [get("/")]
+fn home() -> String {
+    return "it's working".to_string()
 }
+
 
 fn main() {
     println!("Welcome to Maxwell Flitton's morse code cipher");
     let out_come = user_input::console_input::get_input();
     let mut test_struct = code_parser::writer::Word::new(&out_come.to_string());
-    println!(":");
     test_struct.contained_compile();
 
     for i in &test_struct.compiled_message {
         print!("=>{}", i);
     }
 
-    let recieved_message = code_parser::reader::ReceivedMessage::new(&test_struct.compiled_message);
-    recieved_message.display();
-}
+    let mut written_message = String::new();
 
-#[cfg(test)]
-mod main_tests {
+    for i in &test_struct.compiled_message {
+        written_message.push("=".chars().next().unwrap());
+        written_message.push(">".chars().next().unwrap());
 
-    use super::define_address;
-    use std::net:: {IpAddr, Ipv4Addr};
-
-    #[test]
-    fn test_address() {
-        let socket = define_address();
-        assert_eq!(socket.ip(), IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
-        assert_eq!(socket.port(), 8080);
+        for x in i.to_string().chars() {
+            written_message.push(x);
+        }
     }
 
+    let _ = file_manager::file_handler::write(written_message);
+
+    let recieved_message = code_parser::reader::ReceivedMessage::new(&test_struct.compiled_message);
+    recieved_message.display();
+    rocket::ignite().mount("/", routes![home]).launch();
 }
