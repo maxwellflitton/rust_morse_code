@@ -7,34 +7,32 @@ mod file_manager;
 
 # [get("/")]
 fn home() -> String {
-    return "it's working".to_string()
+    let compiled_message = file_manager::file_handler::read_data();
+    return compiled_message.to_string()
 }
 
+# [get("/update/<message>")]
+fn update(message: String) -> String {
+    let mut word_struct = code_parser::writer::Word::new(&message);
+    word_struct.contained_compile();
+
+    let written_message = &word_struct.construct_message();
+    let _ = file_manager::file_handler::write(written_message.to_string());
+    return "Message has been updated".to_string()
+}
 
 fn main() {
     println!("Welcome to Maxwell Flitton's morse code cipher");
     let out_come = user_input::console_input::get_input();
-    let mut test_struct = code_parser::writer::Word::new(&out_come.to_string());
-    test_struct.contained_compile();
 
-    for i in &test_struct.compiled_message {
-        print!("=>{}", i);
-    }
+    let mut word_struct = code_parser::writer::Word::new(&out_come.to_string());
+    word_struct.contained_compile();
+    &word_struct.display();
 
-    let mut written_message = String::new();
+    let written_message = &word_struct.construct_message();
+    let _ = file_manager::file_handler::write(written_message.to_string());
 
-    for i in &test_struct.compiled_message {
-        written_message.push("=".chars().next().unwrap());
-        written_message.push(">".chars().next().unwrap());
-
-        for x in i.to_string().chars() {
-            written_message.push(x);
-        }
-    }
-
-    let _ = file_manager::file_handler::write(written_message);
-
-    let recieved_message = code_parser::reader::ReceivedMessage::new(&test_struct.compiled_message);
+    let recieved_message = code_parser::reader::ReceivedMessage::new(&word_struct.compiled_message);
     recieved_message.display();
-    rocket::ignite().mount("/", routes![home]).launch();
+    rocket::ignite().mount("/", routes![home, update]).launch();
 }

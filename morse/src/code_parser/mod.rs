@@ -1,4 +1,5 @@
 
+
 pub mod writer {
     mod cipher;
 
@@ -36,8 +37,22 @@ pub mod writer {
             self.compiled_message = buffer;
         }
 
-        pub fn display(self) {
-            for i in self.compiled_message {
+        pub fn construct_message(&self) -> String {
+            let mut written_message = String::new();
+
+            for i in &self.compiled_message {
+                written_message.push("=".chars().next().unwrap());
+                written_message.push(">".chars().next().unwrap());
+
+                for x in i.to_string().chars() {
+                    written_message.push(x);
+                }
+            }
+            return written_message
+        }
+
+        pub fn display(&self) {
+            for i in &self.compiled_message {
                 print!("=>{}", i);
             }
             println!(":");
