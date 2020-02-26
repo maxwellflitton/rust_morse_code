@@ -11,6 +11,12 @@ pub mod file_handler {
         Ok(())
     }
 
+    pub fn read_data() -> String {
+//    let data = fs::read("./foo.txt").expect("Unable to read file at './foo.txt'");
+        let data = fs::read_to_string("message.txt").expect("Unable to read file at 'message.txt'");
+        return data
+    }
+
 }
 
 #[cfg(test)]
